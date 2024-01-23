@@ -1,0 +1,45 @@
+:root{
+    --primary-color: #ff3158;
+    --black: #000;
+    --black-00: rgba(0,0,0,.7);
+    --black-01: rgba(0,0,0,.5);
+    --black-02: rgba(0,0,0,.4);
+    --black-03: rgba(0,0,0,.2);
+    --black-04: #212121;
+    --black-05: #333;
+    --black-06: #222;
+    --black-07: rgba(34,34,34,.5);
+    --white: #fff;
+    --white-01: #f5f4f3;
+    --white-02:#FFFFFF;
+    --white-03:#ffffffe8;
+    --gray: #d7d6d6ff;
+    --gray-01: rgba(215, 214, 214, 0.819);
+    --gray-02: #a7a7a7;
+    --gray-03: #888;
+    --gray-04 : #dadada;
+    --gray-05: rgba(113, 113, 113, 0.50);
+    --gray-07: rgba(34, 34, 34, 0.06);
+    --explore-3dspace-svg-url: url('../images/explore_3d_space.svg');
+
+    --pink-01:#FF3158;
+    /* font-size 16px */
+    --font-size-base: 1rem;
+    /* font-size 12px */
+    --font-size-base-sm: calc(var(--font-size-base) * 0.75);
+    /* font-size 14px */
+    --font-size-base-md: calc(var(--font-size-base) * 0.875);
+    /* font-size 18px */
+    --font-size-base-lg: calc(var(--font-size-base) * 1.125);
+    /* font-size 20px */
+    --font-size-base-xm: calc(var(--font-size-base) * 1.25);
+    /* font-size 22px */
+    --font-size-base-xl: calc(var(--font-size-base) * 1.375);
+    /* font-size 24px */
+    --font-size-base-xxl: calc(var(--font-size-base) * 1.5);
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semi-bold: 600;
+    --font-weight-bold: 700;
+}

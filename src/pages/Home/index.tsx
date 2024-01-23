@@ -168,7 +168,7 @@ export default function HomePage() {
         ))}
       </Krpano>
 
-      <div className="scene-panel">
+      {/* <div className="scene-panel">
         <div className="scene-panel__menu">
           {MENUS.map((sc, idx) => (
             <div
@@ -197,9 +197,9 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      <div className="toolbar">
+      {/* <div className="toolbar">
         <MouseHoldView
           onHold={handleView.bind(undefined, ROTATE_DIRECTION.LEFT)}
         >
@@ -237,7 +237,7 @@ export default function HomePage() {
         >
           vr
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
