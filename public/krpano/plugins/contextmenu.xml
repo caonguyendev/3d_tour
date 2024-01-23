@@ -1,0 +1,16 @@
+<krpano>
+	
+	<!--
+		contextmenu.xml
+		krpano 1.20
+		
+		A helper script for changing the mouse-control-mode and the 
+		viewing projections via the context-menu.
+	-->
+	
+	<contextmenu versioninfo="false" fullscreen="false">
+		<item name="logo" caption="[img src=[dq]images/logo.png[dq] style=[dq]width:48px;[dq]/]" onclick="trace(logo);" />
+		<item name="copyright" separator="true" caption="Processed by Home3ds" onclick="trace(copyright);" />
+	</contextmenu>
+
+</krpano>

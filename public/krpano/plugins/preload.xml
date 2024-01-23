@@ -1,0 +1,51 @@
+<krpano>
+    <!--
+    maxlevel: Maximum level of preloaded tiles. Default preload all.
+    onloading: Will be triggered after each image is loaded. Can be used to update progress.
+    percentage: Current loading progress. Read only.
+-->
+    <plugin name="preload"
+        url="../js/preload.js"
+        maxlevel="1"
+        onloading="updateProgressBar(get(percentage));"
+        keep="true"
+    ></plugin>
+
+    <action name="updateProgressBar" type="Javascript"><![CDATA[
+        progressBar(args[1]);
+        if(args[1] == 100){
+            krpano.actions.tween('layer[preloading_container].alpha', 0); 
+            $(".overlay-home").classList.remove('hide');
+        }
+    ]]></action>
+
+    <data name="loading_content_html"><![CDATA[
+        <h2 class="title">Virtual Staging - Two Bed Home</h2>
+        <div class="copyright"></div>
+    ]]></data>
+
+    <data name="progress_html"><![CDATA[
+        <div class="progress-bar">
+            <svg id="svg" class="progress-circle" width="96" height="96" viewport="0 0 96 96" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <circle class="progress-circle-back" r="44" cx="48" cy="48"></circle>
+                <circle id="bar" class="progress-circle-prog" r="44" cx="48" cy="48"></circle>
+            </svg>
+            <div class="progress-bar-text">Loading</div>
+        </div>	
+    ]]></data>
+
+    <data name="presented_by_html"><![CDATA[
+        <h2 class="preloading-presented-by">Presented by</h2>
+        <div class="preloading-presented-name">MatterScan</div>
+    ]]></data>
+
+    <layer name="preloading_container" type="container" autoalpha="true" width="100%" height="100%"
+        bgalpha="1" zorder="999" keep="true">
+        <layer name="preloading_title" cssClass="preloading_title" type="text"
+            html="get:data[loading_content_html].content" bg="false" align="center" y="-200" />
+        <layer name="preloading_loading" type="text" html="get:data[progress_html].content"
+            bg="false" align="center" y="-10" />
+        <layer name="preloading_presented_by" type="text" html="get:data[presented_by_html].content"
+            bg="false" align="center" y="120" />
+    </layer>
+</krpano>

@@ -1,0 +1,401 @@
+<krpano>
+
+	<!--
+		depthmap_measure3d.xml
+		krpano 1.21
+
+		https://krpano.com/plugins/xmlextensions/#depthmap_measure3d
+
+		A little helper tool and example for doing measurements in Depthmap-Panos / 3D-Models.
+	-->
+
+	<include url="./doubleclick_style.xml" />
+
+	<!-- settings -->
+	<depthmap_measure3d
+		ui.bool="true"
+		gap.number="0.0"
+		showslope.bool="false"
+		/>
+
+	<!-- styles/designs for the measurement elements -->
+	<style name="depthmap_measure3d_cursor"
+		keep="true"
+		type="text"
+		width="5" height="5" scale="0.2"
+		oversampling="3"
+		mipmapping="true"
+		bgcolor="0x000000"
+		bgalpha="1"
+		bgroundedge="15"
+		bgborder="15 0xFFFFFF 1"
+		bgborderblend="false"
+		bgshadow="0 0 5 0x000000 0.5"
+		distorted="true"
+		depth="0"
+		depthbuffer="true"
+		depthoffset="-100"
+		depthwrite="false"
+		rotationorder="zxy"
+		enabled="false"
+		zorder="0"
+	/>
+
+	<style name="depthmap_measure3d_marker"
+		keep="true"
+		type="text"
+		enabled="false"
+		width="4"
+		height="4"
+		bgroundedge="4"
+		oversampling="3"
+		mipmapping="true"
+		bgcolor="0xFFFFFF"
+		bgalpha="1"
+		bgborder="4 0xFFFFFF 1"
+		bgborderblend="false"
+		bgshadow="0 0 2 0xFFFFFF 0.8"
+		scale="0.25"
+		zoom="true"
+		distorted="true"
+		rotationorder="zxy"
+		twosided="true"
+		depth="0"
+		depthbuffer="true"
+		depthwrite="false"
+		depthoffset="-200"
+		zorder="1"
+	/>
+
+	<style name="depthmap_measure3d_line"
+		cssClass="depthmap_measure3d_line"
+		keep="true"
+		cursor="pointer"
+		borderwidth="1.5"
+		borderwidth3d="true"
+		bordercolor="0xFFFFFF"
+		depthbuffer="true"
+		depthwrite="false"
+		depthoffset="-200"
+		zorder="1"
+	/>
+
+	<style name="depthmap_measure3d_linetext"
+		keep="true"
+		type="text"
+		css="font-size: 14px; font-family: 'Public Sans'; font-weight: 400;"
+		textalign="center"
+		bgcolor="0xFFFFFF"
+		bgalpha="1"
+		bgborder="1 0xFFFFFF 1"
+		bgroundedge="7"
+		padding="2 4"
+		depth="0"
+		depthbuffer="false"
+		depthoffset="-200"
+		zorder="2"
+	/>
+
+	<!-- css styles for the default user-interface -->
+	<cssstyles>
+		.measure_overlay { z-index: -999!important; width: 100%!important; height: 100%!important; transform: translate(0)!important; }
+		.measure_overlay div[spellcheck="false"] {
+			width: 100%!important;
+			height: 100%!important;
+			padding: 0!important;
+		}
+		.overlay { position: relative; top: 0; right: 0; width: 100%; height: 100%; background-color: var(--black-03); opacity: 1; }
+		.overlay.hide { opacity: 0; }
+	</cssstyles>
+
+	<!-- overlay user-interface -->
+	<data name="depthmap_measure3d_overlay_html"><![CDATA[
+		<div class="overlay hide"></div>
+	]]></data>
+
+	<action autorun="onstart" scope="local" type="Javascript"><![CDATA[
+		let depthmap_measure3d = krpano.depthmap_measure3d;
+
+		if(depthmap_measure3d.ui)
+		{
+			let overlay = krpano.addlayer("depthmap_measure3d_overlay");
+			overlay.setvars({keep:true,
+				type:"text",
+				html:"data:depthmap_measure3d_overlay_html",
+				cssclass:"measure_overlay",
+				cursor:"default",
+				padding:"4 6",
+			});
+		}
+	]]></action>
+
+	<action name="depthmap_measure3d_showinfo" scope="local" args="infotext">
+		addlayer('depthmap_measure3d_infotext',l);
+		set(l, type=text, html=get(infotext), cssClass="depthmap-measure3d-infotext", bg=false, txtshadow='0 1 4 0x000000 1.0', enabled=false, alpha=0);
+		tween(l.alpha, 1.0);
+		delayedcall(3.0,
+			tween(l.alpha, 0.0, 0.25, default, removelayer(get(l.name)); );
+		);
+	</action>
+
+	<action name="depthmap_measure3d_start" type="Javascript"><![CDATA[
+		krpano.hotspot.getArray().filter(i => i.style?.includes('depthmap_measure3d_')).forEach(i => i.visible = true);
+
+		let depthmap_measure3d = krpano.depthmap_measure3d;
+		let gap = depthmap_measure3d.gap;
+
+		let hs = krpano.addhotspot("auto", "webgl");
+		hs.loadstyle("depthmap_measure3d_cursor");
+
+		let line = null;
+		let point1 = null;
+		let point2 = null;
+		let p1marker = null;
+		let p2marker = null;
+
+		krpano.events.onclick = function()
+		{	
+			<!-- Left mouse click -->
+			if(krpano.mouse.button === 0){
+				let hit = null;
+
+				// Click chuột điểm đầu tiên
+				if (line == null)
+				{
+					line = krpano.addhotspot("auto", "webgl");
+					line.loadstyle("depthmap_measure3d_line");
+
+					point1 = line.point.createItem(0);
+					point2 = line.point.createItem(1);
+					point1.x = point2.x = hs.tx;
+					point1.y = point2.y = hs.ty;
+					point1.z = point2.z = hs.tz;
+
+					p1marker = krpano.addhotspot("auto", "webgl");
+					p1marker.loadstyle("depthmap_measure3d_marker");
+					p1marker.tx = point1.x;
+					p1marker.ty = point1.y;
+					p1marker.tz = point1.z;
+					p1marker.rx = hs.rx;
+					p1marker.ry = hs.ry;
+					p1marker.rz = hs.rz;
+
+					return;
+				}
+
+				// click chuột điểm thứ 2
+				// finish
+				let dx = point2.x - point1.x;
+				let dy = point2.y - point1.y;
+				let dz = point2.z - point1.z;
+				// tính khoảnh cách giữa 2 điểm
+				let length = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+				// Điểm thứ 2 ở gần điểm đầu tiên -> double click
+				if(length < 5){
+					// Tìm điểm đối diện của điểm click chuột
+					hit = krpano.actions.raycastdepth(hs.tx, hs.ty, hs.tz, hs.nx, hs.ny, hs.nz);
+					if (hit)
+					{
+						point2.x = hit.x;
+						point2.y = hit.y;
+						point2.z = hit.z;
+
+						dx = point2.x - point1.x;
+						dy = point2.y - point1.y;
+						dz = point2.z - point1.z;
+						length = Math.sqrt(dx*dx + dy*dy + dz*dz);
+					}
+					else
+					{
+						krpano.call("depthmap_measure3d_showinfo('no hit')");
+						p1marker.remove();
+						line.remove();
+						return;
+					}
+				}
+
+				let lineinfo = krpano.addhotspot("auto", "webgl");
+				lineinfo.loadstyle("depthmap_measure3d_linetext");
+
+				krpano.distance = length;
+				lineinfo.distance = length;
+				const currentUnitValue = $('input[name="unit"]:checked').value;
+				switch(currentUnitValue) {
+					case 'feet':
+						krpano.v_formated = (krpano.distance*1/30.48).toFixed(2)+' ft';
+						break;
+					default:
+						krpano.v_formated = (krpano.distance*1/100).toFixed(2)+' m';
+				}
+				lineinfo.html = krpano.v_formated;
+
+				if (depthmap_measure3d.showslope)
+				{
+					let y_angle = Math.atan2(-dy, Math.sqrt(dx*dx + dz*dz) ) / Math.PI * 180.0;
+					lineinfo.html += "[br]" + Math.abs(y_angle).toFixed(2) + "°";
+				}
+
+				lineinfo.deletehtml = "<div style='border-radius:7px;color: var(--primary-color);font-weight:500;'>Remove&nbsp;</div>";
+				
+				// place between the points
+				lineinfo.tx = 0.5*point1.x + 0.5*point2.x;
+				lineinfo.ty = 0.5*point1.y + 0.5*point2.y;
+				lineinfo.tz = 0.5*point1.z + 0.5*point2.z;
+
+				// On click remove line that is measured
+				lineinfo.onclick = function()
+				{
+					if (lineinfo.backuphtml)
+					{	
+						lineinfo.hs_line.remove();
+						lineinfo.hs_p1marker.remove();
+						lineinfo.hs_p2marker.remove();
+						lineinfo.remove();
+					}
+					else
+					{
+						lineinfo.backuphtml = lineinfo.html;
+						lineinfo.html = lineinfo.deletehtml;
+
+						krpano.actions.delayedcall(1, function()
+						{
+							if (lineinfo.backuphtml)
+							{
+								lineinfo.html = lineinfo.backuphtml
+								lineinfo.backuphtml = null;
+							}
+						});
+					}
+				}
+
+				if (krpano.device.mouse)
+				{
+					lineinfo.onover = function()
+					{
+						if (!lineinfo.backuphtml)
+						{
+							lineinfo.backuphtml = lineinfo.html;
+							lineinfo.html = lineinfo.deletehtml;
+						}
+					}
+
+					lineinfo.onout = function()
+					{
+						if (lineinfo.backuphtml)
+						{
+							lineinfo.html = lineinfo.backuphtml;
+							lineinfo.backuphtml = null;
+						}
+					}
+				}
+
+				p2marker = krpano.addhotspot("auto", "webgl");
+				p2marker.loadstyle("depthmap_measure3d_marker");
+				p2marker.tx = point2.x;
+				p2marker.ty = point2.y;
+				p2marker.tz = point2.z;
+
+				p2marker.rx = (hit || hs).rx;
+				p2marker.ry = (hit || hs).ry;
+				p2marker.rz = (hit || hs).rz;
+
+				lineinfo.hs_line = line;
+				lineinfo.hs_p1marker = p1marker;
+				lineinfo.hs_p2marker = p2marker;
+
+				line = null;
+				point1 = null;
+				point2 = null;
+				p1marker = null;
+				p2marker = null;
+			}
+		}
+
+		krpano.depthmap_measure3d_loop = true;
+
+		krpano.actions.asyncloop("depthmap_measure3d_loop",
+			function()
+			{
+				let hit = null;
+
+				if (krpano.hoveringelement == null || krpano.hoveringelement == hs)
+				{
+					if (krpano.webvr && krpano.webvr.isenabled)
+					{
+						let vrcontrollers = krpano.webvr.vrcontrollers;
+						if (vrcontrollers && vrcontrollers.length > 0)
+						{
+							let vrcontrollers_count = vrcontrollers.length;
+							for (let i=0; i < vrcontrollers_count; i++)
+							{
+								let vrcontroller = vrcontrollers[i];
+								if ( vrcontrollers_count == 1 || (vrcontrollers_count >= 2 && vrcontroller.hand == "right") )
+								{
+									hit = krpano.actions.raycastdepth(vrcontroller.tx, vrcontroller.ty, vrcontroller.tz, vrcontroller.dx, vrcontroller.dy, vrcontroller.dz);
+								}
+							}
+						}
+						else
+						{
+							hit = krpano.actions.raycastdepth(krpano.view.tx, krpano.view.ty, krpano.view.tz, krpano.view.dir.x, krpano.view.dir.y, krpano.view.dir.z);
+						}
+					}
+					else
+					{
+						hit = krpano.actions.screentodepth(krpano.mouse.x, krpano.mouse.y);
+					}
+				}
+
+				if (hit)
+				{
+					// optionally add a small gap/offset to the hit surface to avoid depthbuffer rendering problems
+					hs.tx = hit.x + hit.nx*gap;
+					hs.ty = hit.y + hit.ny*gap;
+					hs.tz = hit.z + hit.nz*gap;
+
+					// hotspot rotation
+					hs.rx = hit.rx;
+					hs.ry = hit.ry;
+					hs.rz = hit.rz;
+
+					// store also the normal of the hit-surface for later usage
+					hs.nx = hit.nx;
+					hs.ny = hit.ny;
+					hs.nz = hit.nz;
+
+					hs.visible = true;
+
+					if (line)
+					{
+						line.visible = true;
+					}
+
+					if (point2)
+					{
+						point2.x = hs.tx;
+						point2.y = hs.ty;
+						point2.z = hs.tz;
+					}
+				}
+				else
+				{	
+					if (line)
+					{
+						line.visible = false;
+					}
+
+					hs.visible = false;
+				}
+			},
+			function()
+			{
+				if(line) line.remove();
+				if(p1marker) p1marker.remove();
+				hs.remove();
+			}
+		);
+
+	]]></action>
+
+</krpano>

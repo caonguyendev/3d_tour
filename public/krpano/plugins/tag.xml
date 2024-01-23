@@ -1,0 +1,230 @@
+<krpano>
+
+	<action name="draggableHotpots" autorun="onstart" type="Javascript"><![CDATA[
+		const tags = krpano.hotspot.getArray().filter(item => [HotspotConst.HOTSPOT_STYLE.STYLE_TAG_HOTSPOT, HotspotConst.HOTSPOT_STYLE.STYLE_LABEL_HOTSPOT, HotspotConst.HOTSPOT_STYLE.STYLE_VIDEO_HOTSPOT, HotspotConst.HOTSPOT_STYLE.STYLE_IMAGE_HOTSPOT].includes(item.style) && item.enabled == true);
+		tags.forEach((tag) => {
+			tag.setvars({
+				onclick: "jscall(startDragHotspot(caller, event));",
+				onup: "jscall(endDragHotspot());"
+			});
+		});
+				
+		$("#videoInput").addEventListener(
+			"click",
+			function () {
+				handleClickFeatureOnRightSidebar()
+				$("#videoInput").setAttribute("disabled", true);
+				loadCursorTagStyles(false);
+				cloudinary
+				.createUploadWidget(
+					getUploadWidgetObjByType(HotspotConst.HOTSPOT_TYPE.VIDEO)
+					,
+					(error, result) => {
+						if (!error && result?.event === "success") {
+								loadCursorTagStyles(
+									true,
+									HotspotConst.HOTSPOT_TYPE.VIDEO,
+									result.info.original_filename,
+									result.info.secure_url
+								);
+							$("#videoInput").removeAttribute("disabled");
+						}
+					}
+				)
+				.open();
+			},
+			false
+		);	
+
+		$("#imageInput").addEventListener(
+			"click",
+			function () {		
+				handleClickFeatureOnRightSidebar()
+				$("#imageInput").setAttribute("disabled", true);
+				loadCursorTagStyles(false);
+				cloudinary
+				.createUploadWidget(
+					getUploadWidgetObjByType(HotspotConst.HOTSPOT_TYPE.IMAGE)
+					,
+					(error, result) => {
+						if (!error && result?.event === "success") {
+								loadCursorTagStyles(
+									true,
+									HotspotConst.HOTSPOT_TYPE.IMAGE,
+									result.info.original_filename,
+									result.info.secure_url
+								);
+							$("#imageInput").removeAttribute("disabled");
+						}
+					}
+				)
+				.open();
+			},
+			false
+		);	
+
+		$("#imageHighlightInput").addEventListener(
+			"click",
+			function () {
+				handleClickFeatureOnRightSidebar()
+				$("#imageHighlightInput").setAttribute("disabled", true);
+				cloudinary
+				.createUploadWidget(
+					getUploadWidgetObjByType(HotspotConst.HOTSPOT_TYPE.IMAGE)
+					,
+					(error, result) => {
+						if (!error && result?.event === "success") {
+							const currentScene = krpano.xml.scene;
+							const url = result.info.secure_url;
+							const listHightLightLocalStorage = getCheckArray(
+								getLocalStorage("listHightlight-VezcYCYdWP7")
+							);
+
+							setLocalStorage("listHightlight-VezcYCYdWP7", [
+								...listHightLightLocalStorage,
+								{
+									id: new Date().valueOf(),
+									scene: currentScene,
+									url
+								},
+							]);
+
+							const newHighLightHTML = `
+								<li class="carousel-item" data-scene-name="${currentScene}">
+									<img src="${url}" draggable="false">
+								</li>`
+
+							$(".wrapper-carousel .items").insertAdjacentHTML("beforeend", newHighLightHTML);
+							assignEventClickToCarouselItems();
+							$("#imageHighlightInput").removeAttribute("disabled");
+						}
+					}
+				)
+				.open();
+			},
+			false
+		);
+
+		$('#setLocation').addEventListener('click', function(event) {
+			handleClickFeatureOnRightSidebar()
+			setLocationByClick()
+		});
+		
+		$('#labelInput').addEventListener('click', function(event) {
+			labelInputByClick()
+		});
+
+    ]]></action>
+
+	<action name="handleAddTag" type="Javascript"><![CDATA[
+		handleClickTag();
+    ]]></action>
+
+	<action name="handleAddNote" type="Javascript"><![CDATA[
+		handleClickNotes();
+    ]]></action>
+
+	<action name="handleAddLabel" type="Javascript"><![CDATA[
+        document.getElementById('labelInput').click();
+    ]]></action>
+
+	<action name="handleAddVideo" type="Javascript"><![CDATA[
+		document.getElementById('videoInput').click();
+    ]]></action>
+
+	<action name="handleAddImage" type="Javascript"><![CDATA[
+		document.getElementById('imageInput').click();
+    ]]></action>
+
+	<action name="handleAddImageHighlight" type="Javascript"><![CDATA[
+		document.getElementById('imageHighlightInput').click();
+	]]></action>
+
+	<action name="handleSetLocation" type="Javascript"><![CDATA[
+		document.getElementById('setLocation').click();
+    ]]></action>
+
+	<action name="handleCancelAddTag" type="Javascript"><![CDATA[
+		loadCursorTagStyles(false);
+    ]]></action>
+
+	<!-- A little custom helper tool for finding hotspot- and viewpoint-positions. -->
+	<action name="editor_help" scope="local" autorun="onstart">
+		<!-- add a textfield that shows the current viewing position -->
+		set(style[editor], padding='4', bgborder='0 0xFFFFFF 1', bgroundedge=1, bgshadow='0 1 4 0x000000 1.0');
+		
+		 addlayer(editor, l);
+		set(l, keep=true, type=text, handcursor=false, align=lefttop, x=12, y=64, css='font-family:monospace;white-space:pre;');
+		l.loadstyle(editor);
+		copy(v, global.view);
+		renderloop(
+			calc(l.html,
+				'[u]view[/u][br]'+
+				'hlookat:'+padleft(roundval(v.hlookat,1),7)+'[br]'+
+				'vlookat:'+padleft(roundval(v.vlookat,1),7)+'[br]'+
+				'    fov:'+padleft(roundval(v.fov,1),7)+'[br]'+
+				'     tx:'+padleft(roundval(v.tx,1),7)+'[br]'+
+				'     ty:'+padleft(roundval(v.ty,1),7)+'[br]'+
+				'     tz:'+padleft(roundval(v.tz,1),7)+'[br]'+
+				'');
+		);
+
+		<!-- add buttons for adding info and text spots -->
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=120, width=100%, html='Add tag', css='font-family:monospace;text-align:center;', onclick='handleAddTag()');
+		
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=150, width=100%, html='Add label', css='font-family:monospace;text-align:center;', onclick='handleAddLabel()');
+		
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=180, width=100%, html='Add image', css='font-family:monospace;text-align:center;', onclick='handleAddImage()');
+
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=210, width=100%, html='Add video', css='font-family:monospace;text-align:center;', onclick='handleAddVideo()');
+		
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=240, width=100%, html='Add highlight', css='font-family:monospace;text-align:center;', onclick='handleAddImageHighlight()');
+
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=270, width=100%, html='Set Location', css='font-family:monospace;text-align:center;', onclick='handleSetLocation()');
+		
+		addlayer(auto, addtaglayer); addtaglayer.loadstyle(editor);
+		set(addtaglayer, keep=true, parent=editor, type=text, y=300, width=100%, html='Add note', css='font-family:monospace;text-align:center;', onclick='handleAddNote()');
+
+		<!-- addlayer(auto, canceladdtaglayer); canceladdtaglayer.loadstyle(editor);
+		set(canceladdtaglayer, keep=true, parent=editor, type=text, y=240, width=100%, html='Cancel add hotspot', css='font-family:monospace;text-align:center;', onclick='handleCancelAddTag()');
+		
+		addlayer(auto, printtagslayer); printtagslayer.loadstyle(editor);
+		set(printtagslayer, keep=true, parent=editor, type=text, y=285, width=100%, html='Save tags', css='font-family:monospace;text-align:center;', onclick='jscall("printTags();")'); -->
+	</action>
+
+	<!-- when dragging a spot or clicking on it, show its current position -->
+	<action name="showspotinfos" scope="local">
+		addlayer('showspotinfos', l);
+		l.loadstyle(editor);
+		set(l, parent=editor, keep=true, type=text, enabled=false, align=lefttop, y=218, width=100%, css='font-family:monospace;white-space:pre;');
+		calc(l.html,
+			'[u]'+caller.style+'[/u][br]'+
+			'    tx:'+padleft(roundval(caller.tx,2),8)+'[br]'+
+			'    ty:'+padleft(roundval(caller.ty,2),8)+'[br]'+
+			'    tz:'+padleft(roundval(caller.tz,2),8)+'[br]'+
+			'   ath:'+padleft(roundval(caller.ath,2),8)+'[br]'+
+			'   atv:'+padleft(roundval(caller.atv,2),8)+'[br]'+
+			'');
+	</action>
+
+	<!-- when hovering a spot, add a contextmenu item for deleting it -->
+	<events name="editor_events" keep="true" oncontextmenu="editor_oncontextmenu_event();" />
+
+	<action name="editor_oncontextmenu_event" scope="local">
+		if(global.overspot !== null,
+			contextmenu.item.insertarrayitem(delspot,0);
+			set(contextmenu.item[delspot].caption, '[span style=[dq]font-weight:bold;[dq]]Editor: Delete Spot[/pan]');
+			set(contextmenu.item[delspot].separator, both);
+			set(contextmenu.item[delspot].onclick, calc('removehotspot(' + overspot + ');set(overspot,null);') );
+		  ,
+			contextmenu.item.removearrayitem(delspot);
+		);
+	</action>
+
+</krpano>

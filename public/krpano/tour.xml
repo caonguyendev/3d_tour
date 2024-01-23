@@ -1,0 +1,2559 @@
+<krpano version="1.21" title="Virtual Tour" onstart="onLoadedXML();">
+<include url="plugins/config.xml" />
+<include url="plugins/contextmenu.xml" />
+<include url="plugins/showtext.xml" />
+<include url="plugins/preload.xml" />
+<include url="plugins/webvr.xml" />
+<include url="plugins/tag.xml" />
+<!-- <include url="FloorPlan/xml/floorplan_SM.xml" /> -->
+<!-- <include url="%SWFPATH%/add_hotspot/plugins_l/add_hotspot.xml" />  -->
+<!-- <include url="%SWFPATH%/add_hotspot/plugins_l/editor/add_hotspot_2.xml" />  -->
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/actiontHS.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/photo.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/poligon.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/sound_hs.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/style_addhs.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/vid_hs.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/video.xml" /> 
+<include url="%SWFPATH%/add_hotspot/plugins_l/plugin_a/youtube.xml" /> 
+<include url="plugins/depthmap_measure3d.xml" />
+<include url="plugins/depthmap_navigation.xml"/>
+<include url="toolbox/stickie_data.xml" />
+
+<!-- load the soundinterface plugin -->
+<plugin name="soundinterface"
+  url="js/soundinterface.js"
+  rootpath=""
+  preload="true"
+  keep="true"
+/>
+
+<plugin name="toolbox" url="toolbox/toolboxV2.js" keep="true" preload="true"
+  poly_bgcolor="0x336699"
+  dot_color="0xffff00"
+  dot_size="12"
+  active_dot_color="0x00ff00"
+  active_dot_size="12"
+
+  keycode_to_home="77"
+  keycode_to_activate="84"
+  keycode_to_log="76"
+  keycode_to_numbers="78"
+  keycode_to_distorted="72"
+  keycode_to_poly="80"
+  keycode_to_grid="71"
+  keycode_to_stickies="74"
+  keycode_to_colorpicker="75"
+  keycode_to_info="73"
+
+  decimals_for_numbers="3"
+  decimals_for_dhe="2"
+
+  basecolor_for_colorpicker="0xff0000"
+/>
+
+<action name="onLoadedXML" type="Javascript"><![CDATA[
+  krpano.prevscene = 'scene_pano4';
+  krpano.call("transition_to_dh()");
+  scenePanoCount();
+  updateHotspotListPositionAndHotspotListOnFloor();
+  showHotspotsInCurrentScene(false);
+  krpano.call("playsound('bgmusic', './audio/background_music.mp3', true)");
+]]></action>
+
+<events name="local_event" keep="true" onclick="js(localEventOnClick());" onautorotateoneround="js(nextScene());"/>
+
+<style name="hotspotvtour4" type="image" url="images/hotspot.svg" capture="false" width="18.5" height="18.5" keep="true" visible="true" distorted="true" depth="0" depthbuffer="true" rotationorder="xzy" rx="90" ty="0" alpha="0.25" onover.addevent="tween(alpha, 1 ,0.2); js(showCursorHotspot(false));" onout.addevent="tween(alpha, 0.4 ,0.2); js(showCursorHotspot());"/>
+<style name="hotspot_dollhouse_and_floorplan" type="image" url="images/hotspot.svg" capture="false" width="18.5" height="18.5" visible="true" distorted="true" depth="0" depthbuffer="true" rotationorder="xzy" rx="90" ty="0" alpha="0.25" onover.addevent="tween(alpha, 1 ,0.2); js(showCursorHotspot(false));" onout.addevent="tween(alpha, 0.4 ,0.2); js(showCursorHotspot());"/>
+<style name="Style_dollhouse" prealign="0|0|0" ox="0" oy="0" oz="0" />
+<style name="Style_floorplan" prealign="0|0|0" ox="0" oy="0" oz="0"/>
+<style name="style_pano1" tx="-1671.52" ty="-142.49" tz="4.93" ox="-1671.52" oy="-142.49" oz="4.93" origin="16.72, 1.42, -0.05" align="-0.01|90.0|0.21" />
+<style name="style_pano2" tx="-1543.73" ty="-141.65" tz="5.03" ox="-1543.73" oy="-141.65" oz="5.03" origin="15.44, 1.42, -0.05" align="0.25|90.39|0.12" />
+<style name="style_pano3" tx="-1573.33" ty="-141.62" tz="187.99" ox="-1573.33" oy="-141.62" oz="187.99" origin="15.73, 1.42, -1.88" align="0.13|85.96|0.3" />
+<style name="style_pano4" tx="-1746.2" ty="-141.85" tz="216.42" ox="-1746.2" oy="-141.85" oz="216.42" origin="17.46, 1.42, -2.16" align="-0.08|87.53|0.68" />
+<style name="style_pano5" tx="-1525.66" ty="-140.34" tz="-114.75" ox="-1525.66" oy="-140.34" oz="-114.75" origin="15.26, 1.4, 1.15" align="0.54|92.46|0.06" />
+<style name="style_pano6" tx="-1731.7" ty="-140.62" tz="-207.46" ox="-1731.7" oy="-140.62" oz="-207.46" origin="17.32, 1.41, 2.07" align="-0.0|89.58|0.59" />
+<style name="style_pano7" tx="-1392.2" ty="-140.13" tz="-171.68" ox="-1392.2" oy="-140.13" oz="-171.68" origin="13.92, 1.4, 1.72" align="-0.47|224.06|-1.06" />
+<style name="style_pano8" tx="-1452.2" ty="-141.37" tz="135.6" ox="-1452.2" oy="-141.37" oz="135.6" origin="14.52, 1.41, -1.36" align="-0.07|89.01|-0.57" />
+<style name="style_pano9" tx="-1349.75" ty="-136.51" tz="58.67" ox="-1349.75" oy="-136.51" oz="58.67" origin="13.5, 1.37, -0.59" align="0.14|91.29|-0.25" />
+<style name="style_pano10" tx="-1349.29" ty="-136.67" tz="206.43" ox="-1349.29" oy="-136.67" oz="206.43" origin="13.49, 1.37, -2.06" align="0.02|90.5|0.17" />
+<style name="style_pano11" tx="-1148.37" ty="-135.4" tz="195.15" ox="-1148.37" oy="-135.4" oz="195.15" origin="11.48, 1.35, -1.95" align="-0.23|92.67|0.22" />
+<style name="style_pano12" tx="-1029.05" ty="-135.53" tz="208.27" ox="-1029.05" oy="-135.53" oz="208.27" origin="10.29, 1.36, -2.08" align="0.36|91.85|0.09" />
+<style name="style_pano13" tx="-867.07" ty="-135.31" tz="204.24" ox="-867.07" oy="-135.31" oz="204.24" origin="8.67, 1.35, -2.04" align="-0.02|-17.28|-0.5" />
+<style name="style_pano14" tx="-1293.61" ty="-134.02" tz="57.69" ox="-1293.61" oy="-134.02" oz="57.69" origin="12.94, 1.34, -0.58" align="1.22|91.68|0.19" />
+<style name="style_pano15" tx="-1214.61" ty="-133.16" tz="64.92" ox="-1214.61" oy="-133.16" oz="64.92" origin="12.15, 1.33, -0.65" align="0.86|50.61|-0.15" />
+<style name="style_pano16" tx="-1149.79" ty="-133.59" tz="-31.01" ox="-1149.79" oy="-133.59" oz="-31.01" origin="11.5, 1.34, 0.31" align="0.12|6.71|-0.03" />
+<style name="style_pano17" tx="-1164.75" ty="-134.24" tz="-189.73" ox="-1164.75" oy="-134.24" oz="-189.73" origin="11.65, 1.34, 1.9" align="-0.4|-2.59|-0.21" />
+<style name="style_pano18" tx="-1015.93" ty="-133.54" tz="-120.01" ox="-1015.93" oy="-133.54" oz="-120.01" origin="10.16, 1.34, 1.2" align="0.26|84.41|0.04" />
+<style name="style_pano19" tx="-1022.56" ty="-133.28" tz="51.21" ox="-1022.56" oy="-133.28" oz="51.21" origin="10.23, 1.33, -0.51" align="-0.04|97.69|-0.07" />
+<style name="style_pano20" tx="-940.09" ty="-133.11" tz="68.9" ox="-940.09" oy="-133.11" oz="68.9" origin="9.4, 1.33, -0.69" align="0.23|136.85|-0.63" />
+<style name="style_pano21" tx="-888.45" ty="-132.91" tz="93.2" ox="-888.45" oy="-132.91" oz="93.2" origin="8.88, 1.33, -0.93" align="0.49|180.29|-0.29" />
+<style name="style_pano22" tx="-837.4" ty="-132.86" tz="69.92" ox="-837.4" oy="-132.86" oz="69.92" origin="8.37, 1.33, -0.7" align="0.27|45.02|0.2" />
+<style name="style_pano23" tx="-792.99" ty="-132.84" tz="23.04" ox="-792.99" oy="-132.84" oz="23.04" origin="7.93, 1.33, -0.23" align="-0.45|57.96|0.71" />
+<style name="style_pano24" tx="-764.21" ty="-133.18" tz="-119.54" ox="-764.21" oy="-133.18" oz="-119.54" origin="7.64, 1.33, 1.2" align="-0.34|-4.4|0.84" />
+<style name="style_pano25" tx="-667.14" ty="-132.66" tz="29.17" ox="-667.14" oy="-132.66" oz="29.17" origin="6.67, 1.33, -0.29" align="0.15|92.2|0.22" />
+<style name="style_pano26" tx="-571.02" ty="-132.71" tz="20.44" ox="-571.02" oy="-132.71" oz="20.44" origin="5.71, 1.33, -0.2" align="-0.47|92.34|0.45" />
+<style name="style_pano27" tx="-573.45" ty="-134.85" tz="-112.76" ox="-573.45" oy="-134.85" oz="-112.76" origin="5.73, 1.35, 1.13" align="-0.13|91.43|-1.26" />
+<style name="style_pano28" tx="-709.83" ty="-132.95" tz="212.09" ox="-709.83" oy="-132.95" oz="212.09" origin="7.1, 1.33, -2.12" align="0.37|89.21|0.04" />
+<style name="style_pano29" tx="-563.48" ty="-133.22" tz="206.92" ox="-563.48" oy="-133.22" oz="206.92" origin="5.63, 1.33, -2.07" align="0.1|87.97|0.07" />
+<style name="style_pano30" tx="-429.83" ty="-133.93" tz="201.09" ox="-429.83" oy="-133.93" oz="201.09" origin="4.3, 1.34, -2.01" align="-0.28|91.24|0.04" />
+<style name="style_pano31" tx="-316.31" ty="-134.29" tz="209.82" ox="-316.31" oy="-134.29" oz="209.82" origin="3.16, 1.34, -2.1" align="0.18|85.82|-0.16" />
+<style name="style_pano32" tx="-201.81" ty="-133.79" tz="209.98" ox="-201.81" oy="-133.79" oz="209.98" origin="2.02, 1.34, -2.1" align="0.46|91.09|-0.21" />
+<style name="style_pano33" tx="-85.76" ty="-133.79" tz="201.51" ox="-85.76" oy="-133.79" oz="201.51" origin="0.86, 1.34, -2.02" align="1.52|-2.29|-0.95" />
+<style name="style_pano34" tx="-77.54" ty="-133.2" tz="90.97" ox="-77.54" oy="-133.2" oz="90.97" origin="0.78, 1.33, -0.91" align="0.48|0.65|-0.89" />
+<style name="style_pano35" tx="-136.39" ty="-133.16" tz="69.19" ox="-136.39" oy="-133.16" oz="69.19" origin="1.36, 1.33, -0.69" align="0.35|-50.94|-0.74" />
+<style name="style_pano36" tx="-185.46" ty="-133.07" tz="23.25" ox="-185.46" oy="-133.07" oz="23.25" origin="1.85, 1.33, -0.23" align="0.21|-44.64|-1.13" />
+<style name="style_pano37" tx="-382.97" ty="-133.11" tz="32.1" ox="-382.97" oy="-133.11" oz="32.1" origin="3.83, 1.33, -0.32" align="0.54|0.77|-0.79" />
+<style name="style_pano38" tx="-193.45" ty="-133.29" tz="-65.88" ox="-193.45" oy="-133.29" oz="-65.88" origin="1.93, 1.33, 0.66" align="-0.42|-24.31|-1.27" />
+<style name="style_pano39" tx="-326.03" ty="-134.25" tz="-163.66" ox="-326.03" oy="-134.25" oz="-163.66" origin="3.26, 1.34, 1.64" align="-0.15|-26.16|-1.48" />
+<style name="style_pano40" tx="-19.62" ty="-133.55" tz="69.16" ox="-19.62" oy="-133.55" oz="69.16" origin="0.2, 1.34, -0.69" align="-0.16|41.0|-1.19" />
+<style name="style_pano41" tx="29.77" ty="-133.87" tz="21.2" ox="29.77" oy="-133.87" oz="21.2" origin="-0.3, 1.34, -0.21" align="0.48|75.63|-0.89" />
+<style name="style_pano42" tx="67.71" ty="-134.23" tz="-85.52" ox="67.71" oy="-134.23" oz="-85.52" origin="-0.68, 1.34, 0.86" align="0.61|91.25|-1.46" />
+<style name="style_pano43" tx="170.05" ty="-135.41" tz="-188.15" ox="170.05" oy="-135.41" oz="-188.15" origin="-1.7, 1.35, 1.88" align="0.6|96.58|-1.46" />
+<style name="style_pano44" tx="192.93" ty="-134.26" tz="65.64" ox="192.93" oy="-134.26" oz="65.64" origin="-1.93, 1.34, -0.66" align="0.27|88.54|-0.71" />
+<style name="style_pano45" tx="371.53" ty="-135.98" tz="75.71" ox="371.53" oy="-135.98" oz="75.71" origin="-3.72, 1.36, -0.76" align="-0.6|3.41|0.02" />
+<style name="style_pano46" tx="394.2" ty="-136.28" tz="-192.25" ox="394.2" oy="-136.28" oz="-192.25" origin="-3.94, 1.36, 1.92" align="0.9|173.26|0.63" />
+<style name="style_pano47" tx="364.6" ty="-136.34" tz="-81.78" ox="364.6" oy="-136.34" oz="-81.78" origin="-3.65, 1.36, 0.82" align="1.49|182.82|-0.07" />
+<style name="style_pano48" tx="104.41" ty="-134.47" tz="204.75" ox="104.41" oy="-134.47" oz="204.75" origin="-1.04, 1.34, -2.05" align="-0.1|85.66|-0.66" />
+<style name="style_pano49" tx="267.0" ty="-135.1" tz="210.28" ox="267.0" oy="-135.1" oz="210.28" origin="-2.67, 1.35, -2.1" align="-0.03|86.79|-0.36" />
+<style name="style_pano50" tx="375.76" ty="-136.2" tz="203.25" ox="375.76" oy="-136.2" oz="203.25" origin="-3.76, 1.36, -2.03" align="-0.02|89.33|-0.92" />
+<style name="style_pano51" tx="472.35" ty="-136.46" tz="216.93" ox="472.35" oy="-136.46" oz="216.93" origin="-4.72, 1.36, -2.17" align="0.08|92.83|-1.95" />
+<style name="style_pano52" tx="585.42" ty="-137.39" tz="191.5" ox="585.42" oy="-137.39" oz="191.5" origin="-5.85, 1.37, -1.92" align="0.48|1.32|-0.41" />
+<style name="style_pano53" tx="594.16" ty="-137.4" tz="119.05" ox="594.16" oy="-137.4" oz="119.05" origin="-5.94, 1.37, -1.19" align="0.37|-1.55|-0.51" />
+<style name="style_pano54" tx="591.95" ty="-137.38" tz="70.19" ox="591.95" oy="-137.38" oz="70.19" origin="-5.92, 1.37, -0.7" align="0.38|42.32|-0.43" />
+<style name="style_pano55" tx="587.28" ty="-136.98" tz="-112.8" ox="587.28" oy="-136.98" oz="-112.8" origin="-5.87, 1.37, 1.13" align="0.71|87.92|-0.18" />
+<style name="style_pano56" tx="719.48" ty="-136.67" tz="18.4" ox="719.48" oy="-136.67" oz="18.4" origin="-7.19, 1.37, -0.18" align="0.18|87.74|-0.31" />
+<style name="style_pano57" tx="808.24" ty="-137.57" tz="17.06" ox="808.24" oy="-137.57" oz="17.06" origin="-8.08, 1.38, -0.17" align="-0.25|88.14|0.76" />
+<style name="style_pano58" tx="801.64" ty="-137.98" tz="-87.0" ox="801.64" oy="-137.98" oz="-87.0" origin="-8.02, 1.38, 0.87" align="0.02|-89.44|-0.3" />
+<style name="style_pano59" tx="716.11" ty="-136.95" tz="213.44" ox="716.11" oy="-136.95" oz="213.44" origin="-7.16, 1.37, -2.13" align="-0.14|89.77|0.22" />
+<style name="style_pano60" tx="848.35" ty="-137.0" tz="206.87" ox="848.35" oy="-137.0" oz="206.87" origin="-8.48, 1.37, -2.07" align="0.43|84.98|-0.54" />
+<style name="style_pano61" tx="962.87" ty="-136.73" tz="200.69" ox="962.87" oy="-136.73" oz="200.69" origin="-9.63, 1.37, -2.01" align="0.36|0.21|-0.18" />
+<style name="style_pano62" tx="954.86" ty="-136.68" tz="66.97" ox="954.86" oy="-136.68" oz="66.97" origin="-9.55, 1.37, -0.67" align="0.3|-2.8|-0.37" />
+<style name="style_pano63" tx="962.16" ty="-134.04" tz="5.26" ox="962.16" oy="-134.04" oz="5.26" origin="-9.62, 1.34, -0.05" align="0.44|4.02|-0.5" />
+<style name="style_pano64" tx="1007.35" ty="-134.17" tz="-122.56" ox="1007.35" oy="-134.17" oz="-122.56" origin="-10.07, 1.34, 1.23" align="0.52|-3.79|-0.76" />
+<style name="style_pano65" tx="1076.15" ty="-134.36" tz="86.69" ox="1076.15" oy="-134.36" oz="86.69" origin="-10.76, 1.34, -0.87" align="0.36|89.3|-0.6" />
+<style name="style_pano66" tx="1078.34" ty="-134.68" tz="224.48" ox="1078.34" oy="-134.68" oz="224.48" origin="-10.78, 1.35, -2.24" align="0.88|79.53|-0.12" />
+<style name="style_pano67" tx="1177.92" ty="-133.82" tz="211.54" ox="1177.92" oy="-133.82" oz="211.54" origin="-11.78, 1.34, -2.12" align="0.79|1.82|-0.46" />
+<style name="style_pano68" tx="1177.02" ty="-134.31" tz="77.05" ox="1177.02" oy="-134.31" oz="77.05" origin="-11.77, 1.34, -0.77" align="0.24|5.49|-0.17" />
+<style name="style_pano69" tx="1187.02" ty="-134.28" tz="11.45" ox="1187.02" oy="-134.28" oz="11.45" origin="-11.87, 1.34, -0.11" align="0.63|-1.37|-0.22" />
+<style name="style_pano70" tx="1205.32" ty="-134.02" tz="-67.95" ox="1205.32" oy="-134.02" oz="-67.95" origin="-12.05, 1.34, 0.68" align="0.32|95.93|-0.3" />
+<style name="style_pano71" tx="1315.11" ty="-133.48" tz="-62.18" ox="1315.11" oy="-133.48" oz="-62.18" origin="-13.15, 1.33, 0.62" align="0.05|92.27|-0.39" />
+<style name="style_pano72" tx="1379.51" ty="-133.18" tz="-190.92" ox="1379.51" oy="-133.18" oz="-190.92" origin="-13.8, 1.33, 1.91" align="0.08|138.53|-0.12" />
+<style name="style_pano73" tx="1358.49" ty="-133.56" tz="66.89" ox="1358.49" oy="-133.56" oz="66.89" origin="-13.58, 1.34, -0.67" align="0.54|59.4|-0.52" />
+<style name="style_pano74" tx="1473.76" ty="-134.27" tz="179.1" ox="1473.76" oy="-134.27" oz="179.1" origin="-14.74, 1.34, -1.79" align="0.12|192.24|0.26" />
+<style name="style_pano75" tx="1541.18" ty="-133.78" tz="67.75" ox="1541.18" oy="-133.78" oz="67.75" origin="-15.41, 1.34, -0.68" align="-0.43|86.85|-0.3" />
+<style name="style_pano76" tx="1707.82" ty="-132.76" tz="79.86" ox="1707.82" oy="-132.76" oz="79.86" origin="-17.08, 1.33, -0.8" align="0.12|121.26|-0.38" />
+<style name="style_pano77" tx="1708.73" ty="-132.41" tz="-40.85" ox="1708.73" oy="-132.41" oz="-40.85" origin="-17.09, 1.32, 0.41" align="-0.36|266.88|-0.79" />
+<style name="style_pano78" tx="1578.89" ty="-132.65" tz="-181.39" ox="1578.89" oy="-132.65" oz="-181.39" origin="-15.79, 1.33, 1.81" align="0.25|245.62|0.55" />
+<style name="style_pano79" tx="1715.66" ty="-132.03" tz="-183.2" ox="1715.66" oy="-132.03" oz="-183.2" origin="-17.16, 1.32, 1.83" align="1.09|89.6|-0.89" />
+<style name="style_pano80" tx="1842.21" ty="-133.41" tz="-187.45" ox="1842.21" oy="-133.41" oz="-187.45" origin="-18.42, 1.33, 1.87" align="-0.91|87.81|-0.7" />
+<style name="style_pano81" tx="1809.05" ty="-131.98" tz="100.17" ox="1809.05" oy="-131.98" oz="100.17" origin="-18.09, 1.32, -1.0" align="0.67|92.01|-0.38" />
+<style name="style_pano82" tx="1956.09" ty="-133.37" tz="95.97" ox="1956.09" oy="-133.37" oz="95.97" origin="-19.56, 1.33, -0.96" align="0.92|70.24|0.16" />
+
+<!-- hotspots  -->
+<hotspot name="hotspot_1" style="hotspotvtour4" tx="-1671.52" ty="-22.49" tz="4.93" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_2" style="hotspotvtour4" tx="-1543.73" ty="-21.65" tz="5.03" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_3" style="hotspotvtour4" tx="-1573.33" ty="-21.62" tz="187.99" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_4" style="hotspotvtour4" tx="-1746.2" ty="-21.85" tz="216.42" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_5" style="hotspotvtour4" tx="-1525.66" ty="-20.34" tz="-114.75" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_6" style="hotspotvtour4" tx="-1731.7" ty="-20.62" tz="-207.46" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_7" style="hotspotvtour4" tx="-1392.2" ty="-20.13" tz="-171.68" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_8" style="hotspotvtour4" tx="-1452.2" ty="-21.37" tz="135.6" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_9" style="hotspotvtour4" tx="-1349.75" ty="-16.51" tz="58.67" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_10" style="hotspotvtour4" tx="-1349.29" ty="-16.67" tz="206.43" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_11" style="hotspotvtour4" tx="-1148.37" ty="-15.40" tz="195.15" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_12" style="hotspotvtour4" tx="-1029.05" ty="-15.53" tz="208.27" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_13" style="hotspotvtour4" tx="-867.07" ty="-15.31" tz="204.24" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_14" style="hotspotvtour4" tx="-1293.61" ty="-14.02" tz="57.69" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_15" style="hotspotvtour4" tx="-1214.61" ty="-13.16" tz="64.92" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_16" style="hotspotvtour4" tx="-1149.79" ty="-13.59" tz="-31.01" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_17" style="hotspotvtour4" tx="-1164.75" ty="-14.24" tz="-189.73" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_18" style="hotspotvtour4" tx="-1015.93" ty="-13.54" tz="-120.01" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_19" style="hotspotvtour4" tx="-1022.56" ty="-13.28" tz="51.21" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_20" style="hotspotvtour4" tx="-940.09" ty="-13.11" tz="68.9" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_21" style="hotspotvtour4" tx="-888.45" ty="-12.91" tz="93.2" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_22" style="hotspotvtour4" tx="-837.4" ty="-12.86" tz="69.92" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_23" style="hotspotvtour4" tx="-792.99" ty="-12.84" tz="23.04" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_24" style="hotspotvtour4" tx="-764.21" ty="-13.18" tz="-119.54" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_25" style="hotspotvtour4" tx="-667.14" ty="-12.66" tz="29.17" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_26" style="hotspotvtour4" tx="-571.02" ty="-12.71" tz="20.44" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_27" style="hotspotvtour4" tx="-573.45" ty="-14.85" tz="-112.76" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_28" style="hotspotvtour4" tx="-709.83" ty="-12.95" tz="212.09" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_29" style="hotspotvtour4" tx="-563.48" ty="-13.22" tz="206.92" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_30" style="hotspotvtour4" tx="-429.83" ty="-13.93" tz="201.09" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_31" style="hotspotvtour4" tx="-316.31" ty="-14.29" tz="209.82" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_32" style="hotspotvtour4" tx="-201.81" ty="-13.79" tz="209.98" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_33" style="hotspotvtour4" tx="-85.76" ty="-13.79" tz="201.51" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_34" style="hotspotvtour4" tx="-77.54" ty="-13.20" tz="90.97" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_35" style="hotspotvtour4" tx="-136.39" ty="-13.16" tz="69.19" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_36" style="hotspotvtour4" tx="-185.46" ty="-13.07" tz="23.25" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_37" style="hotspotvtour4" tx="-382.97" ty="-13.11" tz="32.1" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_38" style="hotspotvtour4" tx="-193.45" ty="-13.29" tz="-65.88" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_39" style="hotspotvtour4" tx="-326.03" ty="-14.25" tz="-163.66" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_40" style="hotspotvtour4" tx="-19.62" ty="-13.55" tz="69.16" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_41" style="hotspotvtour4" tx="29.77" ty="-13.87" tz="21.2" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_42" style="hotspotvtour4" tx="67.71" ty="-14.23" tz="-85.52" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_43" style="hotspotvtour4" tx="170.05" ty="-15.41" tz="-188.15" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_44" style="hotspotvtour4" tx="192.93" ty="-14.26" tz="65.64" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_45" style="hotspotvtour4" tx="371.53" ty="-15.98" tz="75.71" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_46" style="hotspotvtour4" tx="394.2" ty="-16.28" tz="-192.25" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_47" style="hotspotvtour4" tx="364.6" ty="-16.34" tz="-81.78" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_48" style="hotspotvtour4" tx="104.41" ty="-14.47" tz="204.75" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_49" style="hotspotvtour4" tx="267.0" ty="-15.10" tz="210.28" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_50" style="hotspotvtour4" tx="375.76" ty="-16.20" tz="203.25" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_51" style="hotspotvtour4" tx="472.35" ty="-16.46" tz="216.93" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_52" style="hotspotvtour4" tx="585.42" ty="-17.39" tz="191.5" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_53" style="hotspotvtour4" tx="594.16" ty="-17.40" tz="119.05" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_54" style="hotspotvtour4" tx="591.95" ty="-17.38" tz="70.19" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_55" style="hotspotvtour4" tx="587.28" ty="-16.98" tz="-112.8" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_56" style="hotspotvtour4" tx="719.48" ty="-16.67" tz="18.4" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_57" style="hotspotvtour4" tx="808.24" ty="-17.57" tz="17.06" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_58" style="hotspotvtour4" tx="801.64" ty="-17.98" tz="-87.0" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_59" style="hotspotvtour4" tx="716.11" ty="-16.95" tz="213.44" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_60" style="hotspotvtour4" tx="848.35" ty="-17.00" tz="206.87" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_61" style="hotspotvtour4" tx="962.87" ty="-16.73" tz="200.69" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_62" style="hotspotvtour4" tx="954.86" ty="-16.68" tz="66.97" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_63" style="hotspotvtour4" tx="962.16" ty="-14.04" tz="5.26" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_64" style="hotspotvtour4" tx="1007.35" ty="-14.17" tz="-122.56" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_65" style="hotspotvtour4" tx="1076.15" ty="-14.36" tz="86.69" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_66" style="hotspotvtour4" tx="1078.34" ty="-14.68" tz="224.48" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_67" style="hotspotvtour4" tx="1177.92" ty="-13.82" tz="211.54" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_68" style="hotspotvtour4" tx="1177.02" ty="-14.31" tz="77.05" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_69" style="hotspotvtour4" tx="1187.02" ty="-14.28" tz="11.45" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_70" style="hotspotvtour4" tx="1205.32" ty="-14.02" tz="-67.95" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_71" style="hotspotvtour4" tx="1315.11" ty="-13.48" tz="-62.18" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_72" style="hotspotvtour4" tx="1379.51" ty="-13.18" tz="-190.92" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_73" style="hotspotvtour4" tx="1358.49" ty="-13.56" tz="66.89" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_74" style="hotspotvtour4" tx="1473.76" ty="-14.27" tz="179.1" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_75" style="hotspotvtour4" tx="1541.18" ty="-13.78" tz="67.75" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_76" style="hotspotvtour4" tx="1707.82" ty="-12.76" tz="79.86" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_77" style="hotspotvtour4" tx="1708.73" ty="-12.41" tz="-40.85" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_78" style="hotspotvtour4" tx="1578.89" ty="-12.65" tz="-181.39" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_79" style="hotspotvtour4" tx="1715.66" ty="-12.03" tz="-183.2" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_80" style="hotspotvtour4" tx="1842.21" ty="-13.41" tz="-187.45" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_81" style="hotspotvtour4" tx="1809.05" ty="-11.98" tz="100.17" rx="-90.0" ry="-0.0" rz="0.0" />
+<hotspot name="hotspot_82" style="hotspotvtour4" tx="1956.09" ty="-13.37" tz="95.97" rx="-90.0" ry="-0.0" rz="0.0" />
+
+
+<!-- scene pano  -->
+
+<scene name="scene_pano1" title="pano1" onstart="" thumburl="panos/pano1.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano1.tiles/preview.jpg" />
+
+ <image style="style_pano1">
+    <cube url="panos/pano1.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="16.72, 1.42, -0.05"
+    align="0|90.0|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano2" title="pano2" onstart="" thumburl="panos/pano2.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano2.tiles/preview.jpg" />
+
+ <image style="style_pano2">
+    <cube url="panos/pano2.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="15.44, 1.42, -0.05"
+    align="0|90.39|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano3" title="pano3" onstart="" thumburl="panos/pano3.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano3.tiles/preview.jpg" />
+
+ <image style="style_pano3">
+    <cube url="panos/pano3.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="15.73, 1.42, -1.88"
+    align="0|85.96|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano4" title="pano4" onstart="" thumburl="panos/pano4.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano4.tiles/preview.jpg" />
+
+ <image style="style_pano4">
+    <cube url="panos/pano4.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="17.46, 1.42, -2.16"
+    align="0|87.53|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano5" title="pano5" onstart="" thumburl="panos/pano5.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano5.tiles/preview.jpg" />
+
+ <image style="style_pano5">
+    <cube url="panos/pano5.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="15.26, 1.4, 1.15"
+    align="0|92.46|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano6" title="pano6" onstart="" thumburl="panos/pano6.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano6.tiles/preview.jpg" />
+
+ <image style="style_pano6">
+    <cube url="panos/pano6.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="17.32, 1.41, 2.07"
+    align="0|89.58|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano7" title="pano7" onstart="" thumburl="panos/pano7.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano7.tiles/preview.jpg" />
+
+ <image style="style_pano7">
+    <cube url="panos/pano7.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="13.92, 1.4, 1.72"
+    align="0|224.06|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano8" title="pano8" onstart="" thumburl="panos/pano8.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano8.tiles/preview.jpg" />
+
+ <image style="style_pano8">
+    <cube url="panos/pano8.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="14.52, 1.41, -1.36"
+    align="0|89.01|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano9" title="pano9" onstart="" thumburl="panos/pano9.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano9.tiles/preview.jpg" />
+
+ <image style="style_pano9">
+    <cube url="panos/pano9.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="13.5, 1.37, -0.59"
+    align="0|91.29|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano10" title="pano10" onstart="" thumburl="panos/pano10.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano10.tiles/preview.jpg" />
+
+ <image style="style_pano10">
+    <cube url="panos/pano10.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="13.49, 1.37, -2.06"
+    align="0|90.5|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano11" title="pano11" onstart="" thumburl="panos/pano11.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano11.tiles/preview.jpg" />
+
+ <image style="style_pano11">
+    <cube url="panos/pano11.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="11.48, 1.35, -1.95"
+    align="0|92.67|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano12" title="pano12" onstart="" thumburl="panos/pano12.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano12.tiles/preview.jpg" />
+
+ <image style="style_pano12">
+    <cube url="panos/pano12.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="10.29, 1.36, -2.08"
+    align="0|91.85|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano13" title="pano13" onstart="" thumburl="panos/pano13.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano13.tiles/preview.jpg" />
+
+ <image style="style_pano13">
+    <cube url="panos/pano13.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="8.67, 1.35, -2.04"
+    align="0|-17.28|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano14" title="pano14" onstart="" thumburl="panos/pano14.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano14.tiles/preview.jpg" />
+
+ <image style="style_pano14">
+    <cube url="panos/pano14.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="12.94, 1.34, -0.58"
+    align="0|91.68|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano15" title="pano15" onstart="" thumburl="panos/pano15.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano15.tiles/preview.jpg" />
+
+ <image style="style_pano15">
+    <cube url="panos/pano15.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="12.15, 1.33, -0.65"
+    align="0|50.61|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano16" title="pano16" onstart="" thumburl="panos/pano16.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano16.tiles/preview.jpg" />
+
+ <image style="style_pano16">
+    <cube url="panos/pano16.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="11.5, 1.34, 0.31"
+    align="0|6.71|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano17" title="pano17" onstart="" thumburl="panos/pano17.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano17.tiles/preview.jpg" />
+
+ <image style="style_pano17">
+    <cube url="panos/pano17.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="11.65, 1.34, 1.9"
+    align="0|-2.59|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano18" title="pano18" onstart="" thumburl="panos/pano18.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano18.tiles/preview.jpg" />
+
+ <image style="style_pano18">
+    <cube url="panos/pano18.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="10.16, 1.34, 1.2"
+    align="0|84.41|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano19" title="pano19" onstart="" thumburl="panos/pano19.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano19.tiles/preview.jpg" />
+
+ <image style="style_pano19">
+    <cube url="panos/pano19.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="10.23, 1.33, -0.51"
+    align="0|97.69|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano20" title="pano20" onstart="" thumburl="panos/pano20.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano20.tiles/preview.jpg" />
+
+ <image style="style_pano20">
+    <cube url="panos/pano20.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="9.4, 1.33, -0.69"
+    align="0|136.85|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano21" title="pano21" onstart="" thumburl="panos/pano21.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano21.tiles/preview.jpg" />
+
+ <image style="style_pano21">
+    <cube url="panos/pano21.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="8.88, 1.33, -0.93"
+    align="0|180.29|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano22" title="pano22" onstart="" thumburl="panos/pano22.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano22.tiles/preview.jpg" />
+
+ <image style="style_pano22">
+    <cube url="panos/pano22.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="8.37, 1.33, -0.7"
+    align="0|45.02|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano23" title="pano23" onstart="" thumburl="panos/pano23.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano23.tiles/preview.jpg" />
+
+ <image style="style_pano23">
+    <cube url="panos/pano23.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="7.93, 1.33, -0.23"
+    align="0|57.96|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano24" title="pano24" onstart="" thumburl="panos/pano24.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano24.tiles/preview.jpg" />
+
+ <image style="style_pano24">
+    <cube url="panos/pano24.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="7.64, 1.33, 1.2"
+    align="0|-4.4|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano25" title="pano25" onstart="" thumburl="panos/pano25.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano25.tiles/preview.jpg" />
+
+ <image style="style_pano25">
+    <cube url="panos/pano25.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="6.67, 1.33, -0.29"
+    align="0|92.2|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano26" title="pano26" onstart="" thumburl="panos/pano26.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano26.tiles/preview.jpg" />
+
+ <image style="style_pano26">
+    <cube url="panos/pano26.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="5.71, 1.33, -0.2"
+    align="0|92.34|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano27" title="pano27" onstart="" thumburl="panos/pano27.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano27.tiles/preview.jpg" />
+
+ <image style="style_pano27">
+    <cube url="panos/pano27.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="5.73, 1.35, 1.13"
+    align="0|91.43|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano28" title="pano28" onstart="" thumburl="panos/pano28.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano28.tiles/preview.jpg" />
+
+ <image style="style_pano28">
+    <cube url="panos/pano28.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="7.1, 1.33, -2.12"
+    align="0|89.21|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano29" title="pano29" onstart="" thumburl="panos/pano29.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano29.tiles/preview.jpg" />
+
+ <image style="style_pano29">
+    <cube url="panos/pano29.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="5.63, 1.33, -2.07"
+    align="0|87.97|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano30" title="pano30" onstart="" thumburl="panos/pano30.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano30.tiles/preview.jpg" />
+
+ <image style="style_pano30">
+    <cube url="panos/pano30.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="4.3, 1.34, -2.01"
+    align="0|91.24|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano31" title="pano31" onstart="" thumburl="panos/pano31.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano31.tiles/preview.jpg" />
+
+ <image style="style_pano31">
+    <cube url="panos/pano31.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="3.16, 1.34, -2.1"
+    align="0|85.82|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano32" title="pano32" onstart="" thumburl="panos/pano32.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano32.tiles/preview.jpg" />
+
+ <image style="style_pano32">
+    <cube url="panos/pano32.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="2.02, 1.34, -2.1"
+    align="0|91.09|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano33" title="pano33" onstart="" thumburl="panos/pano33.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano33.tiles/preview.jpg" />
+
+ <image style="style_pano33">
+    <cube url="panos/pano33.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="0.86, 1.34, -2.02"
+    align="0|-2.29|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano34" title="pano34" onstart="" thumburl="panos/pano34.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano34.tiles/preview.jpg" />
+
+ <image style="style_pano34">
+    <cube url="panos/pano34.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="0.78, 1.33, -0.91"
+    align="0|0.65|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano35" title="pano35" onstart="" thumburl="panos/pano35.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano35.tiles/preview.jpg" />
+
+ <image style="style_pano35">
+    <cube url="panos/pano35.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="1.36, 1.33, -0.69"
+    align="0|-50.94|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano36" title="pano36" onstart="" thumburl="panos/pano36.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano36.tiles/preview.jpg" />
+
+ <image style="style_pano36">
+    <cube url="panos/pano36.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="1.85, 1.33, -0.23"
+    align="0|-44.64|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano37" title="pano37" onstart="" thumburl="panos/pano37.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano37.tiles/preview.jpg" />
+
+ <image style="style_pano37">
+    <cube url="panos/pano37.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="3.83, 1.33, -0.32"
+    align="0|0.77|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano38" title="pano38" onstart="" thumburl="panos/pano38.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano38.tiles/preview.jpg" />
+
+ <image style="style_pano38">
+    <cube url="panos/pano38.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="1.93, 1.33, 0.66"
+    align="0|-24.31|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano39" title="pano39" onstart="" thumburl="panos/pano39.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano39.tiles/preview.jpg" />
+
+ <image style="style_pano39">
+    <cube url="panos/pano39.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="3.26, 1.34, 1.64"
+    align="0|-26.16|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano40" title="pano40" onstart="" thumburl="panos/pano40.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano40.tiles/preview.jpg" />
+
+ <image style="style_pano40">
+    <cube url="panos/pano40.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="0.2, 1.34, -0.69"
+    align="0|41.0|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano41" title="pano41" onstart="" thumburl="panos/pano41.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano41.tiles/preview.jpg" />
+
+ <image style="style_pano41">
+    <cube url="panos/pano41.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-0.3, 1.34, -0.21"
+    align="0|75.63|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano42" title="pano42" onstart="" thumburl="panos/pano42.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano42.tiles/preview.jpg" />
+
+ <image style="style_pano42">
+    <cube url="panos/pano42.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-0.68, 1.34, 0.86"
+    align="0|91.25|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano43" title="pano43" onstart="" thumburl="panos/pano43.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano43.tiles/preview.jpg" />
+
+ <image style="style_pano43">
+    <cube url="panos/pano43.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-1.7, 1.35, 1.88"
+    align="0|96.58|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano44" title="pano44" onstart="" thumburl="panos/pano44.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano44.tiles/preview.jpg" />
+
+ <image style="style_pano44">
+    <cube url="panos/pano44.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-1.93, 1.34, -0.66"
+    align="0|88.54|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano45" title="pano45" onstart="" thumburl="panos/pano45.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano45.tiles/preview.jpg" />
+
+ <image style="style_pano45">
+    <cube url="panos/pano45.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-3.72, 1.36, -0.76"
+    align="0|3.41|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano46" title="pano46" onstart="" thumburl="panos/pano46.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano46.tiles/preview.jpg" />
+
+ <image style="style_pano46">
+    <cube url="panos/pano46.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-3.94, 1.36, 1.92"
+    align="0|173.26|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano47" title="pano47" onstart="" thumburl="panos/pano47.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano47.tiles/preview.jpg" />
+
+ <image style="style_pano47">
+    <cube url="panos/pano47.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-3.65, 1.36, 0.82"
+    align="0|182.82|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano48" title="pano48" onstart="" thumburl="panos/pano48.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano48.tiles/preview.jpg" />
+
+ <image style="style_pano48">
+    <cube url="panos/pano48.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-1.04, 1.34, -2.05"
+    align="0|85.66|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano49" title="pano49" onstart="" thumburl="panos/pano49.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano49.tiles/preview.jpg" />
+
+ <image style="style_pano49">
+    <cube url="panos/pano49.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-2.67, 1.35, -2.1"
+    align="0|86.79|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano50" title="pano50" onstart="" thumburl="panos/pano50.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano50.tiles/preview.jpg" />
+
+ <image style="style_pano50">
+    <cube url="panos/pano50.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-3.76, 1.36, -2.03"
+    align="0|89.33|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano51" title="pano51" onstart="" thumburl="panos/pano51.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano51.tiles/preview.jpg" />
+
+ <image style="style_pano51">
+    <cube url="panos/pano51.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-4.72, 1.36, -2.17"
+    align="0|92.83|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano52" title="pano52" onstart="" thumburl="panos/pano52.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano52.tiles/preview.jpg" />
+
+ <image style="style_pano52">
+    <cube url="panos/pano52.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-5.85, 1.37, -1.92"
+    align="0|1.32|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano53" title="pano53" onstart="" thumburl="panos/pano53.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano53.tiles/preview.jpg" />
+
+ <image style="style_pano53">
+    <cube url="panos/pano53.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-5.94, 1.37, -1.19"
+    align="0|-1.55|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano54" title="pano54" onstart="" thumburl="panos/pano54.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano54.tiles/preview.jpg" />
+
+ <image style="style_pano54">
+    <cube url="panos/pano54.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-5.92, 1.37, -0.7"
+    align="0|42.32|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano55" title="pano55" onstart="" thumburl="panos/pano55.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano55.tiles/preview.jpg" />
+
+ <image style="style_pano55">
+    <cube url="panos/pano55.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-5.87, 1.37, 1.13"
+    align="0|87.92|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano56" title="pano56" onstart="" thumburl="panos/pano56.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano56.tiles/preview.jpg" />
+
+ <image style="style_pano56">
+    <cube url="panos/pano56.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-7.19, 1.37, -0.18"
+    align="0|87.74|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano57" title="pano57" onstart="" thumburl="panos/pano57.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano57.tiles/preview.jpg" />
+
+ <image style="style_pano57">
+    <cube url="panos/pano57.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-8.08, 1.38, -0.17"
+    align="0|88.14|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano58" title="pano58" onstart="" thumburl="panos/pano58.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano58.tiles/preview.jpg" />
+
+ <image style="style_pano58">
+    <cube url="panos/pano58.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-8.02, 1.38, 0.87"
+    align="0|-89.44|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano59" title="pano59" onstart="" thumburl="panos/pano59.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano59.tiles/preview.jpg" />
+
+ <image style="style_pano59">
+    <cube url="panos/pano59.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-7.16, 1.37, -2.13"
+    align="0|89.77|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano60" title="pano60" onstart="" thumburl="panos/pano60.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano60.tiles/preview.jpg" />
+
+ <image style="style_pano60">
+    <cube url="panos/pano60.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-8.48, 1.37, -2.07"
+    align="0|84.98|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano61" title="pano61" onstart="" thumburl="panos/pano61.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano61.tiles/preview.jpg" />
+
+ <image style="style_pano61">
+    <cube url="panos/pano61.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-9.63, 1.37, -2.01"
+    align="0|0.21|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano62" title="pano62" onstart="" thumburl="panos/pano62.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano62.tiles/preview.jpg" />
+
+ <image style="style_pano62">
+    <cube url="panos/pano62.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-9.55, 1.37, -0.67"
+    align="0|-2.8|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano63" title="pano63" onstart="" thumburl="panos/pano63.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano63.tiles/preview.jpg" />
+
+ <image style="style_pano63">
+    <cube url="panos/pano63.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-9.62, 1.34, -0.05"
+    align="0|4.02|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano64" title="pano64" onstart="" thumburl="panos/pano64.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano64.tiles/preview.jpg" />
+
+ <image style="style_pano64">
+    <cube url="panos/pano64.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-10.07, 1.34, 1.23"
+    align="0|-3.79|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano65" title="pano65" onstart="" thumburl="panos/pano65.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano65.tiles/preview.jpg" />
+
+ <image style="style_pano65">
+    <cube url="panos/pano65.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-10.76, 1.34, -0.87"
+    align="0|89.3|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano66" title="pano66" onstart="" thumburl="panos/pano66.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano66.tiles/preview.jpg" />
+
+ <image style="style_pano66">
+    <cube url="panos/pano66.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-10.78, 1.35, -2.24"
+    align="0|79.53|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano67" title="pano67" onstart="" thumburl="panos/pano67.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano67.tiles/preview.jpg" />
+
+ <image style="style_pano67">
+    <cube url="panos/pano67.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-11.78, 1.34, -2.12"
+    align="0|1.82|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano68" title="pano68" onstart="" thumburl="panos/pano68.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano68.tiles/preview.jpg" />
+
+ <image style="style_pano68">
+    <cube url="panos/pano68.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-11.77, 1.34, -0.77"
+    align="0|5.49|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano69" title="pano69" onstart="" thumburl="panos/pano69.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano69.tiles/preview.jpg" />
+
+ <image style="style_pano69">
+    <cube url="panos/pano69.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-11.87, 1.34, -0.11"
+    align="0|-1.37|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano70" title="pano70" onstart="" thumburl="panos/pano70.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano70.tiles/preview.jpg" />
+
+ <image style="style_pano70">
+    <cube url="panos/pano70.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-12.05, 1.34, 0.68"
+    align="0|95.93|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano71" title="pano71" onstart="" thumburl="panos/pano71.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano71.tiles/preview.jpg" />
+
+ <image style="style_pano71">
+    <cube url="panos/pano71.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-13.15, 1.33, 0.62"
+    align="0|92.27|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano72" title="pano72" onstart="" thumburl="panos/pano72.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano72.tiles/preview.jpg" />
+
+ <image style="style_pano72">
+    <cube url="panos/pano72.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-13.8, 1.33, 1.91"
+    align="0|138.53|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano73" title="pano73" onstart="" thumburl="panos/pano73.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano73.tiles/preview.jpg" />
+
+ <image style="style_pano73">
+    <cube url="panos/pano73.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-13.58, 1.34, -0.67"
+    align="0|59.4|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano74" title="pano74" onstart="" thumburl="panos/pano74.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano74.tiles/preview.jpg" />
+
+ <image style="style_pano74">
+    <cube url="panos/pano74.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-14.74, 1.34, -1.79"
+    align="0|192.24|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano75" title="pano75" onstart="" thumburl="panos/pano75.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano75.tiles/preview.jpg" />
+
+ <image style="style_pano75">
+    <cube url="panos/pano75.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-15.41, 1.34, -0.68"
+    align="0|86.85|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano76" title="pano76" onstart="" thumburl="panos/pano76.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano76.tiles/preview.jpg" />
+
+ <image style="style_pano76">
+    <cube url="panos/pano76.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-17.08, 1.33, -0.8"
+    align="0|121.26|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano77" title="pano77" onstart="" thumburl="panos/pano77.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano77.tiles/preview.jpg" />
+
+ <image style="style_pano77">
+    <cube url="panos/pano77.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-17.09, 1.32, 0.41"
+    align="0|266.88|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano78" title="pano78" onstart="" thumburl="panos/pano78.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano78.tiles/preview.jpg" />
+
+ <image style="style_pano78">
+    <cube url="panos/pano78.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-15.79, 1.33, 1.81"
+    align="0|245.62|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano79" title="pano79" onstart="" thumburl="panos/pano79.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano79.tiles/preview.jpg" />
+
+ <image style="style_pano79">
+    <cube url="panos/pano79.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-17.16, 1.32, 1.83"
+    align="0|89.6|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano80" title="pano80" onstart="" thumburl="panos/pano80.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano80.tiles/preview.jpg" />
+
+ <image style="style_pano80">
+    <cube url="panos/pano80.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-18.42, 1.33, 1.87"
+    align="0|87.81|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano81" title="pano81" onstart="" thumburl="panos/pano81.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano81.tiles/preview.jpg" />
+
+ <image style="style_pano81">
+    <cube url="panos/pano81.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-18.09, 1.32, -1.0"
+    align="0|92.01|0"
+ />
+ </image>
+</scene>
+
+<scene name="scene_pano82" title="pano82" onstart="" thumburl="panos/pano82.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+
+ <control bouncinglimits="calc:image.cube ? true : false" />
+
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+
+ <preview url="panos/pano82.tiles/preview.jpg" />
+
+ <image style="style_pano82">
+    <cube url="panos/pano82.tiles/pano_%s.jpg" />
+    <depthmap url="model/model.depth"
+    enabled="true"
+    rendermode="3dmodel"
+    background="none"
+    scale="100"
+    offset="0.0"
+    subdiv=""
+    encoding="gray"
+    axis="+x+y+z"
+    cull="front"
+    hittest="true"
+    origin="-19.56, 1.33, -0.96"
+    align="0|70.24|0"
+ />
+ </image>
+</scene>
+
+  <!-- Dollhouse Scene -->
+<scene name="dollhouse" title="Dollhouse" onstart="" lat="" lng="" heading="" css="z-index: 9999;">
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+ <image style="Style_dollhouse">
+  <sphere url="dollhouse/MyDollhouseTexture.jpg" />
+  <depthmap url="dollhouse/dollhouse.obj" texurl="dollhouse/dollhouse.mtl" backgroundurl="images/black.svg" enabled="true" rendermode="3dmodel" textured="true" background="none" scale="100" offset="0" subdiv="" encoding="gray" cull="front" hittest="true" />
+ </image> 
+</scene>
+
+  <!--  Floorplan Scene  -->
+<scene name="floorplan" title="Floorplan" onstart="" lat="" lng="" heading="" css="z-index: 9999;">
+ <view hlookat="0.0" vlookat="0.0" fovtype="MFOV" limitview="auto" />
+ <image style="Style_floorplan">
+  <sphere url="dollhouse/MyDollhouseTexture.jpg" />
+  <depthmap url="dollhouse/dollhouse.obj" texurl="dollhouse/dollhouse.mtl" backgroundurl="images/black.svg" enabled="true" rendermode="3dmodel" textured="true" background="none" scale="100" offset="0" subdiv="" encoding="gray" cull="front" hittest="true" />
+ </image> 
+</scene>
+
+<!-- Action  -->
+
+<!--  Transition to dollhouse   -->
+<action name="transition_to_dh">
+  <!--call when access the page in the first time  -->
+  if(!isvalue(xml.scene),
+    tween(view.hlookat|view.vlookat, 0|30, 1.0, easeinoutquad);
+  );
+  set(view.fovmax, 135);
+  adjusthlookat(110);
+  if(contains(xml.scene, 'scene_pano')
+    ,
+    tween(view.vlookat, 30, 1.0, easeinoutquad);
+    if(device.desktop, tween(view.oz, 1150, 2.0, easeinoutquad););
+    if(device.tablet, tween(view.oz, 1380, 2.0, easeinoutquad););
+    if(device.mobile, tween(view.oz, 2500, 2.0, easeinoutquad););
+    ,
+    if(device.desktop, tween(view.oz, 1150, 1, easeinoutquad););
+    if(device.tablet, tween(view.oz, 1380, 1, easeinoutquad););
+    if(device.mobile, tween(view.oz, 2500, 1, easeinoutquad););
+    if(contains(xml.scene, 'floorplan'),
+      <!-- change view from floor plan -> dollhouse view -->
+      tween(view.hlookat|view.vlookat, 0|30, 1.0, easeinoutquad);
+    );
+  );
+  jsget(autoTour, "document.querySelector('.wrapper-carousel')");
+	jsget(autoTourNotStartedYet, "document.querySelector('.wrapper-carousel.not-started-yet')");
+	jsget(anyActiveCarouselItem, "document.querySelector('.carousel-item.active');");
+	if(autoTour,
+		if(autoTourNotStartedYet AND !anyActiveCarouselItem, 
+			tween(view.fov, 75, 1.5, easeinoutquad);
+			,
+			tween(view.fov, 115, 1.5, easeinoutquad);
+		);
+		,
+		tween(view.fov, 75, 1.5, easeinoutquad);
+	);
+  tween(view.ox|view.oy, 0.0|0.0, 2.0, easeinoutquad); 
+  tween(view.tx|view.ty|view.tz, 0.0|0.0|241.0|, 2.0, easeinoutquad); 
+  loadscene(dollhouse, null, MERGE|KEEPMOVING, BLEND(0.25)); 
+  tween(view.fovmin|view.fovmax, 20|135, 1.5, easeinoutquad);
+  set(control.invert,true);
+  wait(LOAD); 
+  js(showHotspotsInCurrentScene());
+</action>
+
+<action name="dh_off"> 
+  tween(view.oz, 0, 2.0); 
+  set(control.invert,false); 
+</action>
+
+<action name="transition_to_floorplan">
+  adjusthlookat(110);
+  jsget(autoTour, "document.querySelector('.wrapper-carousel')");
+	jsget(autoTourNotStartedYet, "document.querySelector('.wrapper-carousel.not-started-yet')");
+	jsget(anyActiveCarouselItem, "document.querySelector('.carousel-item.active');");
+	if(autoTour,
+		if(autoTourNotStartedYet AND !anyActiveCarouselItem, 
+			if(device.desktop, tween(view.oz|view.fov, 7000|9, 1.0, easeinoutquad););
+			if(device.tablet, tween(view.oz|view.fov, 7000|11, 1.0, easeinoutquad););
+			if(device.mobile, tween(view.oz|view.fov, 7000|25, 1.0, easeinoutquad););
+			,
+			if(device.desktop, tween(view.oz|view.fov, 7000|19, 1.0, easeinoutquad););
+			if(device.tablet, tween(view.oz|view.fov, 7000|30, 1.0, easeinoutquad););
+			if(device.mobile, tween(view.oz|view.fov, 7000|45, 1.0, easeinoutquad););
+		);
+		,
+		if(device.desktop, tween(view.oz|view.fov, 7000|9, 1.0, easeinoutquad););
+		if(device.tablet, tween(view.oz|view.fov, 7000|11, 1.0, easeinoutquad););
+		if(device.mobile, tween(view.oz|view.fov, 7000|25, 1.0, easeinoutquad););
+	);
+  tween(view.tx|view.ty|view.tz, 0|0|0, 1.0, easeinoutquad);
+  tween(view.hlookat|view.vlookat, 0|90, 1.0, easeinoutquad);
+  loadscene(floorplan, null, MERGE|KEEPMOVING, BLEND(0.25)); 
+  tween(view.fovmin|view.fovmax, 3|45, 1.5, easeinoutquad);
+  set(control.invert,true);
+  wait(BLEND);
+  js(showHotspotsInCurrentScene());
+</action>
+
+<action name="floorplan_off">
+  tween(view.oz, 0, 1);
+  tween(view.fov|view.vlookat, 10|0, 2.0);
+  set(control.invert,false); 
+</action>
+
+
+</krpano>
